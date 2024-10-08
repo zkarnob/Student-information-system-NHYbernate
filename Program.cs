@@ -46,6 +46,12 @@ public class SessionMaker
 
     private static void InitializeSessionFactory()
     {
+        _sessionFactory = Fluently.Configure()
+            .Database(MsSqlConfiguration.MsSql2012 
+                .ConnectionString(@"Server=ZAWAD_H_TOOL\SQLEXPRESS;Database=StudentDB;Integrated Security=True;TrustServerCertificate=True;"))
+            .Mappings(m => m.FluentMappings.AddFromAssemblyOf<StudentMapping>()) 
+            .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(true, true)) 
+            .BuildSessionFactory();
     }
 
     public static ISession OpenSession()
@@ -55,12 +61,32 @@ public class SessionMaker
 
     public static void AddStudent(string name, int age, string dept)
     {
-       
+       using(var session = OpenSession())
+        {
+            using (var transaction = session.BeginTransaction())
+            {
+                var student = new Student()
+                {
+                    Name = name,
+                    Age = age,
+                    Dept = dept
+                };
+                session.Save(student);
+                transaction.Commit();
+            }
+        }
     }
 
     public static void GetAllStudents()
     {
-     
+        using(var se = OpenSession()) {
+            var students = se.Query<Student>().ToList();
+            foreach (var student in students)
+            {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}, Dept: {student.Dept}");
+            }
+        }
+
     }
 
     static void Main(string[] args)
