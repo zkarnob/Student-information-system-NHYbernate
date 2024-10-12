@@ -11,8 +11,11 @@
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="3.4.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
-    <PackageReference Include="NHibernate" Version="5.5.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudentManagementSystem.BusinessLogic\StudentManagementSystem.BusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>
